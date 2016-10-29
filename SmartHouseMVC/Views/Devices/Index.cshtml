@@ -1,0 +1,132 @@
+﻿@using SmartHouseMVC.Models.AbstractDevices
+@using SmartHouseMVC.Models.Interfaces
+@using SmartHouseMVC.Helpers
+
+@model IDictionary<int, Device>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Smart House</title>
+    <link rel="stylesheet" href="~/Content/Site.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <script src="~/scripts/bootstrap.min.js"></script>
+    <script src="~/scripts/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+    @using (Html.BeginForm("Add", "Devices"))
+    {
+        @Html.DropDownList("deviceType", (IEnumerable<SelectListItem>)ViewBag.DevicesList)
+        <input type="submit" value="Добавить">
+    }
+    @foreach (KeyValuePair<int, Device> device in Model)
+    {
+        string style;
+        if (device.Value is ICountEnergy)
+        {
+            style = "device energyMeter";
+        }
+        else if (device.Value is ITemperatureSensor)
+        {
+            style = "device temperatureSensor";
+        }
+        else if ((device.Value is ClimateDevice) && (device.Value is IFan))
+        {
+            style = "device conditioner";
+        }
+        else 
+        {
+            style = "device convector";
+        }
+        <div class="@style">
+            <span>@device.Value.Name</span><br />
+            @Html.CreateState(device.Value.State)<br />
+            <span>Мощность: @device.Value.Power</span><br />
+            @if (device.Value is ClimateDevice)
+            {
+                <span>Заданная температура: @(((ClimateDevice)device.Value).Temperature)</span><br />
+                <span>Включить авто режим:</span><br />
+            }
+            @if (device.Value is ITemperatureSensor)
+            {
+                <span>Температура: @(((ITemperatureSensor)device.Value).TemperatureEnvironment)</span><br />
+            }
+            @if (device.Value is ICountEnergy)
+            {
+                <span>Суммарная мощность: @(((ICountEnergy)device.Value).AllPower)</span><br />
+            }
+            <a href="@Url.Action("Delete/" + device.Key, "Devices")" class="btn btn-default removeButton">
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
+            <a href="@Url.Action("Off/" + device.Key, "Devices")" class="btn btn-default offButton">
+                <span class="glyphicon glyphicon-off"></span>
+            </a>
+            @if (device.Value is ClimateDevice)
+            {
+                <a href="@Url.Action("DecreaseTemperature/" + device.Key, "Devices")" class="btn btn-default">
+                    <span class="glyphicon glyphicon-minus"></span>
+                </a>
+                <a href="@Url.Action("IncreaseTemperature/" + device.Key, "Devices")" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </a>
+                <a href="@Url.Action("SetAutoTemperature/" + device.Key, "Devices")" class="btn btn-default autoButton">
+                    <span class="glyphicon glyphicon-ok-circle"></span>
+                </a>
+            }
+            @if (device.Value is ICountEnergy)
+            {
+                <a href="@Url.Action("CountEnergy/" + device.Key, "Devices")" class="btn btn-default countEnergyButton">
+                    <span class="glyphicon glyphicon-flash"></span>
+                </a>
+            }
+            @if (device.Value is IFan)
+            {
+                <br />
+                <span>Вентилятор: @Html.CreateState(((IFan)device.Value).Fan)</span>
+                <a href="@Url.Action("OffFan/" + device.Key, "Devices")" class="btn btn-default offFanButton">
+                    <span class="glyphicon glyphicon-off"></span>
+                </a>
+            }
+        </div>
+        <div id="helpPanel">
+            <span>Доступные команды:</span>
+            <br />
+            <a class="btn btn-default">
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
+            <span>Удалить устройство</span>
+            <br />
+            <a class="btn btn-default">
+                <span class="glyphicon glyphicon-off"></span>
+            </a>
+            <span>Включить/Выключить устройство</span>
+            <br />
+            <a class="btn btn-default">
+                <span class="glyphicon glyphicon-minus"></span>
+            </a>
+            <span>Уменьшить температуру</span>
+            <br />
+            <a class="btn btn-default">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+            <span>Увеличить температуру</span>
+            <br />
+            <a class="btn btn-default">
+                <span class="glyphicon glyphicon-ok-circle"></span>
+            </a>
+            <span>Включить автоматический режим, для кондиционера при 25 - 40 С, для конвектора при -40 - 10 С от температуры окружающей среды</span>
+            <br />
+            <a class="btn btn-default">
+                <span class="glyphicon glyphicon-flash"></span>
+            </a>
+            <span>Просмотр суммарной мощности всех устройств</span>
+        </div>
+    }
+</body>
+</html>

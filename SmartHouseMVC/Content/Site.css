@@ -1,0 +1,93 @@
+﻿* {
+    font-family: Arial, serif;
+}
+
+body {
+    background: url(Background/Body.jpg) no-repeat;
+    background-size: 100%;
+}
+
+.device {
+    height: 200px;
+    width: 250px;
+    border: 1px solid black;
+    float: left;
+    margin: 3px;
+    padding: 3px;
+    position: relative;
+}
+
+.removeButton {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+
+.offButton {
+    position: absolute;
+    right: 5px;
+    top: 40px;
+}
+
+.autoButton {
+    position: absolute;
+    right: 5px;
+    top: 75px;
+}
+
+.countEnergyButton {
+    position: absolute;
+    right: 5px;
+    top: 75px;
+}
+
+.offFanButton {
+    position: absolute;
+    right: 5px;
+    top: 130px;
+}
+
+.helpLabel {
+    height: 80px;
+    width: 240px;
+    position: absolute;
+    text-align: center;
+    bottom: 5px;
+    left: 5px;
+}
+
+.energyMeter {
+    background: url(Background/EnergyMeter.jpg) no-repeat;
+    background-position: center center;
+}
+
+.temperatureSensor {
+    background: url(Background/TemperatureSensor.jpg) no-repeat;
+    background-position: center center;
+}
+
+.conditioner {
+    background: url(Background/Conditioner.jpg) no-repeat;
+    background-position: center center;
+}
+
+.convector {
+    background: url(Background/Convector.jpg) no-repeat;
+    background-position: center center;
+}
+
+.device > span {
+    background: white;
+    color: #006078;
+}
+
+#helpPanel {
+    position: absolute;
+    bottom: 50px;
+    left: 50px;
+}
+
+#helpPanel > span {
+    background: white;
+    color: #006078;
+}
